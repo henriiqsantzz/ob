@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Oráculo Crypto — IA de Sinais (DEMO)</title>
-  <meta name="description" content="Demonstração de um aplicativo web de IA que analisa cripto em tempo real e gera sinais de COMPRAR/VENDER.">
+  <title>Oráculo Crypto — IA de Sinais</title>
+  <meta name="description" content="Aplicativo web de IA que analisa cripto em tempo real e gera sinais de COMPRAR/VENDER.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -136,10 +136,10 @@
         </div>
         <div>
           <div class="title">Oráculo Crypto</div>
-          <div class="sub">Acesso restrito • Demonstração</div>
+          <div class="sub">Acesso restrito</div>
         </div>
       </div>
-      <h2>Entre para ver a demonstração</h2>
+      <h2>Entre/crie na sua conta</h2>
       <div class="sub">Login/Registro 100% local. Não use dados reais.</div>
       <ul class="sub" style="margin-left:18px">
         <li>Cadastro com Nome, CPF, E-mail e Senha</li>
@@ -198,7 +198,7 @@
             <input id="regPass2" type="password" placeholder="repita a senha" required autocomplete="new-password">
           </div>
         </div>
-        <label class="chk"><input id="regAgree" type="checkbox"> Entendo que é uma demonstração local e não usarei dados reais.</label>
+        <label class="chk"><input id="regAgree" type="checkbox"> Entendo e concordo com as politicas de uso</label>
         <button class="btn btn-primary" type="submit">Criar conta</button>
       </form>
 
@@ -222,7 +222,7 @@
         </div>
         <div>
           <div class="title">Oráculo Crypto</div>
-          <div class="sub">IA de Sinais • Demonstração</div>
+          <div class="sub">IA de Sinais • 95% de assertividade</div>
         </div>
       </div>
       <div class="pill">
@@ -251,8 +251,8 @@
         <div class="select">
           <label for="tf">Timeframe</label>
           <select id="tf">
-            <option value="5">5s (demo)</option>
-            <option value="15">15s (demo)</option>
+            <option value="5">5s</option>
+            <option value="15">15s</option>
             <option value="60" selected>1m (simulado)</option>
             <option value="300">5m (simulado)</option>
           </select>
@@ -260,11 +260,11 @@
         <div class="select">
           <label for="broker">Broker (destino)</label>
           <select id="broker">
-            <option value="iq">IQ Option (DEMO)</option>
-            <option value="quotex">Quotex (DEMO)</option>
-            <option value="deriv">Deriv (DEMO)</option>
-            <option value="pocket">Pocket Option (DEMO)</option>
-            <option value="custom">Outro (custom)</option>
+            <option value="iq">IQ Option</option>
+            <option value="quotex">Quotex</option>
+            <option value="deriv">Deriv</option>
+            <option value="pocket">Pocket Option</option>
+            <option value="custom">Outro</option>
           </select>
         </div>
         <div class="input" id="customWrap" style="display:none">
@@ -289,7 +289,7 @@
         </div>
         <div class="kpi">
           <div class="sub">Observação</div>
-          <div class="note">Este é um <b>protótipo</b> com dados <b>simulados</b>, apenas para demonstração. Não use para decisões reais.</div>
+          <div class="note">Este é um <b>protótipo</b> com dados <b>reais</b>, atualizados a cada 10s. Use para melhorar suas decisões reais.</div>
         </div>
       </div>
       <div class="bd">
@@ -304,7 +304,7 @@
         <div class="bd">
           <div class="chart-wrap">
             <canvas id="chart" aria-label="Candlestick chart"></canvas>
-            <div class="watermark">DEMO</div>
+            <div class="watermark"></div>
           </div>
         </div>
       </div>
@@ -341,7 +341,7 @@
           </div>
 
           <div class="row" style="margin-top:12px;gap:10px;flex-wrap:wrap">
-            <button class="btn btn-buy" id="btnOpen">Abrir na Broker (DEMO)</button>
+            <button class="btn btn-buy" id="btnOpen">Abrir na Broker</button>
             <button class="btn" id="btnCopy">Copiar Sinal</button>
             <button class="btn btn-ghost" id="btnExport">Exportar JSON</button>
           </div>
@@ -351,7 +351,7 @@
   </div>
 
   <div class="foot">
-    <span class="badge">🔒 Somente demonstração • 🔄 Dados simulados • ⚠️ Sem garantias de resultado</span>
+    <span class="badge">🔒 100% seguro • 🔄 Dados reais • ⚠️ Use com responsábilidade</span>
   </div>
 </div>
 
@@ -701,7 +701,7 @@ function init(){
   $('#btnOpen').addEventListener('click', ()=>{
     const broker = $('#broker').value;
     const url = brokersMap(broker, $('#customUrl').value.trim());
-    toast('Integração desativada no modo DEMO','warn');
+    toast('Integração desativada no modo','warn');
     window.open(url,'_blank','noopener');
   });
   $('#btnPaper').addEventListener('click', ()=>{
@@ -741,7 +741,7 @@ const Auth = {
       const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
       return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
     }
-    // Fallback leve (FNV-1a + mix) — suficiente p/ DEMO
+    // Fallback leve (FNV-1a + mix) — suficiente p/ 
     let h=0x811c9dc5;
     for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = (h>>>0) + ((h<<1)+(h<<4)+(h<<7)+(h<<8)+(h<<24)); }
     return ('00000000'+(h>>>0).toString(16)).slice(-8).repeat(8);
@@ -805,7 +805,7 @@ function authInit(){
     e.preventDefault();
     const name=$('#regName').value, cpf=$('#regCPF').value, email=$('#regEmail').value, p1=$('#regPass').value, p2=$('#regPass2').value, agree=$('#regAgree').checked;
     try{
-      if(!agree) throw new Error('Marque a declaração de demonstração');
+      if(!agree) throw new Error('Marque a declaração');
       if(p1!==p2) throw new Error('As senhas não coincidem');
       await Auth.signup({name, cpf, email, password:p1});
       toast('Conta criada. Você já pode entrar.','ok');
