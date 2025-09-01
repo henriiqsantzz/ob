@@ -3,27 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Oráculo Crypto — IA de Sinais</title>
+  <title>Oráculo Crypto — IA de Sinais (DEMO)</title>
   <meta name="description" content="Demonstração de um aplicativo web de IA que analisa cripto em tempo real e gera sinais de COMPRAR/VENDER.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg: #0b0f19;          /* Black / Navy night */
-      --bg-2:#0f1424;
-      --card:#131a2a;         /* Card surface */
-      --elev:#182136;         /* Elevated */
-      --line:#24304d;         /* Borders */
-      --text:#e6eefd;         /* Primary text */
-      --muted:#9fb0d1;        /* Secondary */
-      --acc:#5eead4;          /* Accent (teal) */
-      --acc-2:#60a5fa;        /* Accent (blue) */
-      --buy:#22c55e;
-      --sell:#ef4444;
-      --warn:#f59e0b;
-      --ok:#10b981;
-      --bad:#ef4444;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius: 16px;
+      --bg:#0b0f19; --bg-2:#0f1424; --card:#131a2a; --elev:#182136; --line:#24304d;
+      --text:#e6eefd; --muted:#9fb0d1; --acc:#5eead4; --acc-2:#60a5fa;
+      --buy:#22c55e; --sell:#ef4444; --warn:#f59e0b; --ok:#10b981; --shadow:0 10px 30px rgba(0,0,0,.35); --radius:16px;
     }
     *{box-sizing:border-box}
     html,body{height:100%;background:radial-gradient(1200px 800px at 15% -10%,#122040 0%,rgba(18,32,64,0) 60%),radial-gradient(1400px 900px at 120% 10%,#1a2b52 0%,rgba(26,43,82,0) 60%),var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,Apple Color Emoji,Noto Color Emoji,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.45;margin:0}
@@ -59,7 +46,7 @@
     /* Inputs */
     label{font-size:12px;color:var(--muted)}
     .input,.select{display:flex;flex-direction:column;gap:6px}
-    select,button,input[type="number"]{appearance:none;background:linear-gradient(180deg,rgba(24,33,54,.9),rgba(24,33,54,.7));border:1px solid var(--line);border-radius:12px;color:var(--text);padding:12px 14px;font-weight:600;outline:none}
+    select,button,input[type="number"], input[type="email"], input[type="password"], input[type="text"]{appearance:none;background:linear-gradient(180deg,rgba(24,33,54,.9),rgba(24,33,54,.7));border:1px solid var(--line);border-radius:12px;color:var(--text);padding:12px 14px;font-weight:600;outline:none}
     select:focus, input:focus{border-color:#4366ff;box-shadow:0 0 0 4px rgba(67,102,255,.18)}
     .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:800;padding:14px 16px;border-radius:12px;border:1px solid #2b3a5d;background:linear-gradient(180deg,#1b2a4a,#15213a);cursor:pointer;transition:transform .04s ease, box-shadow .2s ease}
     .btn:hover{box-shadow:0 10px 30px rgba(96,165,250,.2)}
@@ -117,9 +104,144 @@
     .switch.on{background:#234b36}
     .switch.on::after{left:28px;background:#34d399}
     .note{font-size:12px;color:var(--muted)}
+
+    /* ================= AUTH OVERLAY (novo) ================= */
+    .auth{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(8,12,22,.85),rgba(8,12,22,.92));backdrop-filter:blur(10px);z-index:5000}
+    .auth .wrap{width:min(880px,94vw);display:grid;grid-template-columns: 1fr 1fr;gap:0;border:1px solid var(--line);background:linear-gradient(180deg,rgba(19,26,42,.95),rgba(19,26,42,.85));border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+    @media (max-width: 850px){.auth .wrap{grid-template-columns:1fr}}
+    .auth .promo{padding:22px;background:radial-gradient(800px 500px at 30% -10%,rgba(96,165,250,.12),transparent 60%);border-right:1px solid var(--line)}
+    .auth .promo h2{margin:0 0 8px 0}
+    .auth .promo ul{margin:10px 0 0 18px;color:#cfe2ff}
+    .auth .panel{padding:22px;display:grid;gap:16px}
+    .tabs{display:flex;gap:8px}
+    .tab{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg,#1b233a,#141c31);cursor:pointer;text-align:center;font-weight:800}
+    .tab.active{border-color:#3b82f6;background:linear-gradient(180deg,#2563eb,#1d4ed8);color:white;box-shadow:0 10px 30px rgba(37,99,235,.25)}
+    .auth .f{display:grid;gap:10px}
+    .auth .foot{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}
+    .auth .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:#cfe2ff}
+    .small{font-size:12px;color:var(--muted)}
+    .right{display:flex;gap:10px;align-items:center}
+    .danger{color:#fca5a5}
+    .strength{height:8px;background:#1f2a44;border-radius:999px;overflow:hidden}
+    .strength .bar{height:100%;width:0;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e)}
   </style>
 </head>
 <body>
+<!-- ================= AUTH OVERLAY (novo) ================= -->
+<div class="auth" id="auth" aria-modal="true" role="dialog">
+  <div class="wrap">
+    <div class="promo">
+      <div class="logo" style="margin-bottom:10px">
+        <div class="logo-badge" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M3 12c0-5 4-9 9-9s9 4 9 9" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M3 12c0 5 4 9 9 9 3 0 5-1.5 7-4" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+            <circle cx="12" cy="12" r="3.5" fill="white"/>
+          </svg>
+        </div>
+        <div>
+          <div class="title">Oráculo Crypto</div>
+          <div class="sub">Acesso restrito • Demonstração</div>
+        </div>
+      </div>
+      <h2>Entre para ver a demonstração</h2>
+      <div class="sub">Seu acesso é protegido por credenciais locais. Nada sai do seu navegador.</div>
+      <ul>
+        <li>Cadastro com <b>Nome, CPF, E-mail</b> e senha</li>
+        <li>Senha com <b>hash SHA-256 + salt</b> (localStorage)</li>
+        <li>Login com <b>Lembrar de mim</b> (até 7 dias)</li>
+        <li>Esqueci a senha (valida e-mail + CPF)</li>
+      </ul>
+      <div class="kpi" style="margin-top:14px">
+        <div class="sub">Aviso de privacidade</div>
+        <div class="note">Não use <b>CPF real</b>. Este é um protótipo 100% local (off-cloud) e serve apenas para fins educativos.</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="tabs">
+        <button class="tab active" data-tab="login" id="tabLogin">Entrar</button>
+        <button class="tab" data-tab="signup" id="tabSignup">Criar conta</button>
+        <button class="tab" data-tab="reset" id="tabReset">Esqueci</button>
+      </div>
+
+      <!-- LOGIN -->
+      <form id="formLogin" class="f" autocomplete="on">
+        <div class="input">
+          <label for="loginEmail">E-mail</label>
+          <input id="loginEmail" type="email" placeholder="voce@email.com" required autocomplete="username" enterkeyhint="go">
+        </div>
+        <div class="input">
+          <label for="loginPass">Senha</label>
+          <input id="loginPass" type="password" placeholder="••••••••" required autocomplete="current-password" enterkeyhint="go">
+        </div>
+        <div class="row">
+          <label class="chk"><input id="remember" type="checkbox"> Lembrar de mim (7 dias)</label>
+          <span class="small">3 tentativas falhas seguidas bloqueiam por 5 min.</span>
+        </div>
+        <button class="btn btn-primary" type="submit">Entrar</button>
+      </form>
+
+      <!-- SIGNUP -->
+      <form id="formSignup" class="f" style="display:none" autocomplete="on">
+        <div class="grid grid-2">
+          <div class="input">
+            <label for="regName">Nome</label>
+            <input id="regName" type="text" placeholder="Seu nome" autocomplete="name">
+          </div>
+          <div class="input">
+            <label for="regCPF">CPF</label>
+            <input id="regCPF" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" autocomplete="off">
+          </div>
+        </div>
+        <div class="input">
+          <label for="regEmail">E-mail</label>
+          <input id="regEmail" type="email" placeholder="voce@email.com" required autocomplete="email">
+        </div>
+        <div class="grid grid-2">
+          <div class="input">
+            <label for="regPass">Senha</label>
+            <input id="regPass" type="password" placeholder="mín. 8 caracteres" required autocomplete="new-password">
+            <div class="strength"><div class="bar" id="strengthBar"></div></div>
+          </div>
+          <div class="input">
+            <label for="regPass2">Confirmar senha</label>
+            <input id="regPass2" type="password" placeholder="repita a senha" required autocomplete="new-password">
+          </div>
+        </div>
+        <label class="chk"><input id="regAgree" type="checkbox"> Declaro que compreendo que é uma <b>demonstração local</b> e não usarei dados reais.</label>
+        <button class="btn btn-primary" type="submit">Criar conta</button>
+      </form>
+
+      <!-- RESET -->
+      <form id="formReset" class="f" style="display:none" autocomplete="off">
+        <div class="note">Redefinição local: informe o e-mail e o CPF cadastrados para trocar a senha.</div>
+        <div class="input">
+          <label for="reEmail">E-mail</label>
+          <input id="reEmail" type="email" placeholder="voce@email.com" required>
+        </div>
+        <div class="input">
+          <label for="reCPF">CPF</label>
+          <input id="reCPF" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" required>
+        </div>
+        <div class="input">
+          <label for="rePass">Nova senha</label>
+          <input id="rePass" type="password" placeholder="mín. 8 caracteres" required>
+        </div>
+        <button class="btn" type="submit">Redefinir senha</button>
+      </form>
+
+      <div class="foot">
+        <span>🔒 LocalStorage • SHA-256 + salt • Sem servidor</span>
+        <div class="right">
+          <span class="small">Precisa de ajuda?</span>
+          <span class="small">Entre em <b>“Configurações → Sessão”</b> para sair.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ================= FIM AUTH ================= -->
+
 <div class="app">
   <!-- Top Nav -->
   <div class="nav">
@@ -134,7 +256,7 @@
         </div>
         <div>
           <div class="title">Oráculo Crypto</div>
-          <div class="sub">IA de Sinais</div>
+          <div class="sub">IA de Sinais • Demonstração</div>
         </div>
       </div>
       <div class="pill">
@@ -165,20 +287,20 @@
         <div class="select">
           <label for="tf">Timeframe</label>
           <select id="tf">
-            <option value="5">5s</option>
-            <option value="15">15s</option>
-            <option value="60" selected>1m</option>
-            <option value="300">5m</option>
+            <option value="5">5s (demo)</option>
+            <option value="15">15s (demo)</option>
+            <option value="60" selected>1m (simulado)</option>
+            <option value="300">5m (simulado)</option>
           </select>
         </div>
         <div class="select">
           <label for="broker">Broker (destino)</label>
           <select id="broker">
-            <option value="iq">IQ Option</option>
-            <option value="quotex">Quotex</option>
-            <option value="deriv">Deriv</option>
-            <option value="pocket">Pocket Option</option>
-            <option value="custom">Outro</option>
+            <option value="iq">IQ Option (DEMO)</option>
+            <option value="quotex">Quotex (DEMO)</option>
+            <option value="deriv">Deriv (DEMO)</option>
+            <option value="pocket">Pocket Option (DEMO)</option>
+            <option value="custom">Outro (custom)</option>
           </select>
         </div>
         <div class="input" id="customWrap" style="display:none">
@@ -194,7 +316,7 @@
           </select>
         </div>
         <div class="input">
-          <label for="balance">Banca</label>
+          <label for="balance">Banca (simulada)</label>
           <input id="balance" type="number" min="50" step="50" value="10000" />
         </div>
         <div class="row" style="margin-top:4px">
@@ -202,12 +324,12 @@
           <button class="btn btn-ghost" id="btnPaper">Paper Trade</button>
         </div>
         <div class="kpi">
-          <div class="sub"></div>
-          <div class="note"></div>
+          <div class="sub">Observação</div>
+          <div class="note">Este é um <b>protótipo</b> com dados <b>simulados</b>, apenas para demonstração. Não use para decisões reais.</div>
         </div>
       </div>
       <div class="bd">
-        <div class="sub">Watchlist</div>
+        <div class="sub">Watchlist (simulada)</div>
         <div class="watchlist" id="watchlist"></div>
       </div>
     </div>
@@ -220,7 +342,7 @@
         <div class="bd">
           <div class="chart-wrap">
             <canvas id="chart" aria-label="Candlestick chart"></canvas>
-            <div class="watermark"></div>
+            <div class="watermark">DEMO</div>
           </div>
         </div>
       </div>
@@ -258,7 +380,7 @@
           </div>
 
           <div class="row" style="margin-top:12px;gap:10px;flex-wrap:wrap">
-            <button class="btn btn-buy" id="btnOpen">Abrir na Broker</button>
+            <button class="btn btn-buy" id="btnOpen">Abrir na Broker (DEMO)</button>
             <button class="btn" id="btnCopy">Copiar Sinal</button>
             <button class="btn btn-ghost" id="btnExport">Exportar JSON</button>
           </div>
@@ -269,7 +391,7 @@
 
   <!-- Footer -->
   <div class="foot">
-    <span class="badge"></span>
+    <span class="badge">🔒 Somente demonstração • 🔄 Dados simulados • ⚠️ Sem garantias de resultado</span>
   </div>
 </div>
 
@@ -315,6 +437,16 @@
         <div class="sub">Idioma</div>
         <div class="note">PT-BR (fixo no protótipo)</div>
       </div>
+
+      <!-- Sessão / Logout (novo) -->
+      <div style="grid-column:1/-1">
+        <div class="sub">Sessão</div>
+        <div class="row">
+          <button class="btn btn-ghost" id="btnLogout">Sair da conta</button>
+          <div class="note mono" id="whoami">—</div>
+        </div>
+      </div>
+
       <div class="grid" style="grid-column:1/-1">
         <div class="kpi">
           <div class="sub">Compliance & Aviso</div>
@@ -336,7 +468,7 @@ const fmt = (n, dp=2) => Number(n).toLocaleString('en-US',{minimumFractionDigits
 const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
 const rnd = (a,b)=>a+Math.random()*(b-a);
 const toast = (msg,type='ok',ms=2700)=>{
-  const el=document.createElement('div'); el.className=`t ${type}`; el.innerHTML=`${msg}`;
+  const el=document.createElement('div'); el.className=\`t \${type}\`; el.innerHTML=\`\${msg}\`;
   $('#toast').appendChild(el); setTimeout(()=>el.remove(),ms);
 };
 const beep = ()=>{
@@ -354,17 +486,9 @@ const storage = {
 };
 /* ========= STATE ========= */
 const state = {
-  prices:[], // candles
-  tf: 60,    // seconds per candle (simulation)
-  base: 65000,
-  asset: 'BTCUSD',
-  ema20:[], ema50:[],
-  rsi14:[],
-  atr14:[],
-  running: true,
-  soundOn: false,
-  paperOn: true,
-  lastSignal: null
+  prices:[], tf:60, base:65000, asset:'BTCUSD',
+  ema20:[], ema50:[], rsi14:[], atr14:[],
+  running:true, soundOn:false, paperOn:true, lastSignal:null
 };
 /* ========= WATCHLIST ========= */
 const symbols = [
@@ -380,13 +504,13 @@ function buildWatchlist(){
     const chg = rnd(-2.4,2.4); const price = s.base * (1 + chg/100);
     const div = document.createElement('div');
     div.className='ticker';
-    div.innerHTML = `
+    div.innerHTML = \`
       <div class="row" style="justify-content:space-between">
-        <div class="sym">${s.sym}</div>
-        <div class="chg ${chg>=0?'up':'down'}">${chg>=0?'+':''}${chg.toFixed(2)}%</div>
+        <div class="sym">\${s.sym}</div>
+        <div class="chg \${chg>=0?'up':'down'}">\${chg>=0?'+':''}\${chg.toFixed(2)}%</div>
       </div>
-      <div class="sub mono">≈ ${fmt(price, s.base<5 ? 4 : 2)}</div>
-    `;
+      <div class="sub mono">≈ \${fmt(price, s.base<5 ? 4 : 2)}</div>
+    \`;
     wrap.appendChild(div);
   });
 }
@@ -405,7 +529,7 @@ window.addEventListener('resize', resize);
 function seedData(){
   state.prices=[]; const base=state.base; let last=base;
   for(let i=0;i<VISIBLE;i++){
-    const vol = Math.max(0.3, Math.random()); // volatility factor
+    const vol = Math.max(0.3, Math.random());
     const drift = rnd(-0.09,0.09);
     const open = last;
     const move = open * (drift/100);
@@ -418,14 +542,13 @@ function seedData(){
   calcIndicators();
 }
 function tick(){
-  // evolve last candle slightly and sometimes push a new one (per ~2 seconds)
   if(state.prices.length===0) return;
   const p = state.prices[state.prices.length-1];
   const vol = Math.max(0.3, Math.random());
   const move = p.c * rnd(-0.08,0.08)/100;
   const nc = p.c + move;
   p.h=Math.max(p.h,nc); p.l=Math.min(p.l,nc); p.c=nc;
-  if(Math.random()<0.25){ // open new candle
+  if(Math.random()<0.25){
     const last = state.prices[state.prices.length-1].c;
     const open = last;
     const close = open + open * rnd(-0.18,0.18)/100;
@@ -463,7 +586,6 @@ function atr(candles, period=14){
     const tr = Math.max(c.h-c.l, Math.abs(c.h-prev), Math.abs(c.l-prev));
     trs.push(tr);
   }
-  // simple EMA-like smoothing
   const out=[]; let a = trs[0];
   const k = 2/(period+1);
   for(let i=0;i<trs.length;i++){ a = trs[i]*k + a*(1-k); out.push(a); }
@@ -477,11 +599,10 @@ function calcIndicators(){
   state.atr14 = atr(state.prices,14);
 }
 function draw(ts=0){
-  if(ts - lastDraw < 33){ requestAnimationFrame(draw); return; } // ~30fps cap
+  if(ts - lastDraw < 33){ requestAnimationFrame(draw); return; }
   lastDraw=ts;
   ctx.clearRect(0,0,W,H);
   if(state.prices.length<2) return;
-  // bounds
   const min = Math.min(...state.prices.map(p=>p.l));
   const max = Math.max(...state.prices.map(p=>p.h));
   const padY = (max-min)*0.08;
@@ -489,11 +610,9 @@ function draw(ts=0){
   const x0 = PAD, x1 = W-PAD, y0 = PAD*0.8, y1 = H-PAD*1.2;
   const n = state.prices.length;
   const cw = (x1-x0)/n;
-  // axes
   ctx.strokeStyle='#233153'; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(x0, y1); ctx.lineTo(x1, y1); ctx.stroke();
-  // y ticks
-  ctx.fillStyle='#9fb0d1'; ctx.font = `${12*dpr}px Inter`;
+  ctx.fillStyle='#9fb0d1'; ctx.font = \`\${12*dpr}px Inter\`;
   for(let t=0;t<=4;t++){
     const yv = yMax - (yMax-yMin)*t/4;
     const y = y0 + (y1-y0)*t/4;
@@ -501,7 +620,6 @@ function draw(ts=0){
     const label = fmt(yv, (yMax<10)?4:2);
     ctx.fillText(label, 8*dpr, y+4*dpr);
   }
-  // candles
   for(let i=0;i<n;i++){
     const c = state.prices[i];
     const x = x0 + i*cw + cw*0.1;
@@ -511,14 +629,11 @@ function draw(ts=0){
     const yO = y0 + (y1-y0)*(1-(c.o - yMin)/(yMax-yMin));
     const yC = y0 + (y1-y0)*(1-(c.c - yMin)/(yMax-yMin));
     ctx.strokeStyle = (c.c>=c.o)?'#22c55e':'#ef4444'; ctx.lineWidth=1.2;
-    // wick
     ctx.beginPath(); ctx.moveTo(x+w/2,yH); ctx.lineTo(x+w/2,yL); ctx.stroke();
-    // body
     ctx.fillStyle = (c.c>=c.o)?'rgba(34,197,94,.9)':'rgba(239,68,68,.9)';
     const bh = Math.max(2, Math.abs(yC - yO));
     ctx.fillRect(x, Math.min(yC,yO), w, bh);
   }
-  // EMA lines
   const plotLine = (arr,color)=>{
     ctx.strokeStyle=color; ctx.lineWidth=1.6; ctx.beginPath();
     for(let i=0;i<n;i++){
@@ -531,7 +646,7 @@ function draw(ts=0){
   plotLine(state.ema20,'#60a5fa'); plotLine(state.ema50,'#5eead4');
   requestAnimationFrame(draw);
 }
-/* ========= SIGNAL ENGINE (heuristic demo) ========= */
+/* ========= SIGNAL ENGINE ========= */
 function genSignal(){
   const N = state.prices.length; if(N<50) return null;
   const c = state.prices[N-1].c;
@@ -540,65 +655,44 @@ function genSignal(){
   const atr = state.atr14[N-1];
   const momentum = (state.prices[N-1].c - state.prices[N-6]?.c) || 0;
   let side='HOLD', score=50, why=[];
-  // rules
   if(e20>e50){score+=12; why.push('EMA20 acima da EMA50');} else {score-=12; why.push('EMA20 abaixo da EMA50');}
   if(rsi>55){score+=8; why.push('RSI14 > 55 (força compradora)');}
   if(rsi<45){score-=8; why.push('RSI14 < 45 (força vendedora)');}
   if(momentum>0){score+=6; why.push('Momentum positivo');}
   if(momentum<0){score-=6; why.push('Momentum negativo');}
-  // normalize
   score = clamp(Math.round(score), 1, 99);
   if(score>=57 && e20>e50) side='BUY';
   if(score<=43 && e20<e50) side='SELL';
-  // levels
   const entry = c;
   const stop  = side==='BUY' ? c - atr*1.2 : side==='SELL' ? c + atr*1.2 : c - atr*2;
   const take  = side==='BUY' ? c + atr*1.8 : side==='SELL' ? c - atr*1.8 : c;
   const riskPct = (Math.abs(entry-stop)/entry)*100;
-  return {
-    ts: new Date().toISOString(),
-    asset: state.asset, tf: state.tf,
-    side, score, entry, stop, take,
-    rsi: Math.round(rsi), ema20:e20, ema50:e50, atr,
-    why, riskPct
-  };
+  return { ts:new Date().toISOString(), asset:state.asset, tf:state.tf,
+    side, score, entry, stop, take, rsi:Math.round(rsi), ema20:e20, ema50:e50, atr, why, riskPct };
 }
 /* ========= UI BIND ========= */
-function updateHeaderMeta(){
-  $('#chartMeta').textContent = `${state.asset} • ${tfLabel(state.tf)} • OHLC + EMA20/50 • RSI14`;
-}
-function tfLabel(tf){
-  const map={5:'5s',15:'15s',60:'1m',300:'5m'};
-  return map[tf]|| (tf+'s');
-}
+function updateHeaderMeta(){ $('#chartMeta').textContent = \`\${state.asset} • \${tfLabel(state.tf)} • OHLC + EMA20/50 • RSI14\`; }
+function tfLabel(tf){ const map={5:'5s',15:'15s',60:'1m',300:'5m'}; return map[tf]|| (tf+'s'); }
 function renderSignal(sig){
   const badge = $('#signalBadge'); const span = badge.querySelector('span');
   badge.classList.remove('sig-buy','sig-sell','sig-hold');
   if(sig.side==='BUY'){badge.classList.add('sig-buy'); span.textContent='🚀 COMPRA (BUY)';}
   else if(sig.side==='SELL'){badge.classList.add('sig-sell'); span.textContent='🧨 VENDA (SELL)';}
   else {badge.classList.add('sig-hold'); span.textContent='⏸️ Aguardar (HOLD)';}
-  // gauge
   const arc = $('#gaugeArc'); const txt = $('#gaugeTxt');
   const len = 2*Math.PI*18; const dash = Math.round(len*(sig.score/100));
-  arc.setAttribute('stroke-dasharray', `${dash} ${len-dash}`);
+  arc.setAttribute('stroke-dasharray', \`\${dash} \${len-dash}\`);
   txt.textContent = sig.score+'%';
-  $('#confInfo').textContent = `score=${sig.score} • RSI=${sig.rsi}`;
+  $('#confInfo').textContent = \`score=\${sig.score} • RSI=\${sig.rsi}\`;
   $('#entry').textContent = 'US$ '+fmt(sig.entry, sig.entry<10?4:2);
   $('#stop').textContent  = 'US$ '+fmt(sig.stop, sig.entry<10?4:2);
   $('#take').textContent  = 'US$ '+fmt(sig.take, sig.entry<10?4:2);
   $('#why').textContent = sig.why.join(' · ');
-  $('#riskEst').textContent = `${fmt(sig.riskPct,2)}% do preço (~${fmt(sig.atr,2)} ATR)`;
+  $('#riskEst').textContent = \`\${fmt(sig.riskPct,2)}% do preço (~\${fmt(sig.atr,2)} ATR)\`;
 }
 function openOverlay(){
   $('#overlay').style.display='flex';
-  const msgs=[
-    'Conectando aos feeds...',
-    'Sincronizando relógio com UTC...',
-    'Analisando volatilidade intrínseca...',
-    'Calculando EMA/RSI/ATR...',
-    'Estimando probabilidade de rompimento...',
-    'Gerando explicações da decisão...'
-  ];
+  const msgs=['Conectando aos feeds...','Sincronizando relógio com UTC...','Analisando volatilidade intrínseca...','Calculando EMA/RSI/ATR...','Estimando probabilidade de rompimento...','Gerando explicações da decisão...'];
   let step=0, prog=0;
   const bar = $('#bar'); const txt=$('#loadMsg');
   const timer = setInterval(()=>{
@@ -621,23 +715,17 @@ function brokersMap(code, urlCustom){
 }
 /* ========= INIT ========= */
 function init(){
-  // restore prefs
   const pref = storage.get('oracle-prefs') || {};
   state.soundOn = !!pref.soundOn; state.paperOn = pref.paperOn!==false;
   if(state.soundOn) $('#swSound').classList.add('on');
   if(state.paperOn) $('#swPaper').classList.add('on');
-  // select bindings
   $('#asset').addEventListener('change', e=>{
     const opt = e.target.selectedOptions[0];
     state.asset = opt.value; state.base = parseFloat(opt.dataset.base||'65000');
     seedData(); updateHeaderMeta(); draw();
   });
-  $('#tf').addEventListener('change', e=>{
-    state.tf = parseInt(e.target.value,10); updateHeaderMeta();
-  });
-  $('#broker').addEventListener('change', e=>{
-    $('#customWrap').style.display = e.target.value==='custom' ? 'block':'none';
-  });
+  $('#tf').addEventListener('change', e=>{ state.tf = parseInt(e.target.value,10); updateHeaderMeta(); });
+  $('#broker').addEventListener('change', e=>{ $('#customWrap').style.display = e.target.value==='custom' ? 'block':'none'; });
   $('#btnSignal').addEventListener('click', ()=>{
     openOverlay();
     setTimeout(()=>{
@@ -645,20 +733,20 @@ function init(){
       if(!sig){ toast('Dados insuficientes para gerar sinal','warn'); return closeOverlay(); }
       state.lastSignal=sig; renderSignal(sig); beep();
       closeOverlay();
-      toast(`<span class="mono">Sinal ${sig.side} ${sig.asset}</span> pronto`);
+      toast(\`<span class="mono">Sinal \${sig.side} \${sig.asset}</span> pronto\`);
     }, 950);
   });
   $('#btnCopy').addEventListener('click', ()=>{
     if(!state.lastSignal) return toast('Gere um sinal primeiro','warn');
     const s = state.lastSignal;
-    const txt = `SIGNAL ${s.asset} ${s.side}\nEntry: ${fmt(s.entry)}\nStop: ${fmt(s.stop)}\nTake: ${fmt(s.take)}\nConf: ${s.score}% • RSI ${s.rsi}\nWhy: ${s.why.join(' / ')}\n${new Date().toLocaleString()}`;
+    const txt = \`SIGNAL \${s.asset} \${s.side}\nEntry: \${fmt(s.entry)}\nStop: \${fmt(s.stop)}\nTake: \${fmt(s.take)}\nConf: \${s.score}% • RSI \${s.rsi}\nWhy: \${s.why.join(' / ')}\n\${new Date().toLocaleString()}\`;
     navigator.clipboard.writeText(txt); toast('Sinal copiado 📋');
   });
   $('#btnExport').addEventListener('click', ()=>{
     if(!state.lastSignal) return toast('Gere um sinal primeiro','warn');
     const blob = new Blob([JSON.stringify(state.lastSignal,null,2)], {type:'application/json'});
     const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
-    a.download=`signal_${state.lastSignal.asset}_${Date.now()}.json`; a.click();
+    a.download=\`signal_\${state.lastSignal.asset}_\${Date.now()}.json\`; a.click();
     URL.revokeObjectURL(a.href);
   });
   $('#btnOpen').addEventListener('click', ()=>{
@@ -672,15 +760,13 @@ function init(){
     const bal = parseFloat($('#balance').value||'0');
     const riskPct = parseFloat($('#risk').value||'1');
     const stake = bal * (riskPct/100);
-    toast(`Paper trade simulado • Stake: $${fmt(stake,2)} • ${state.lastSignal.side}`,'ok',3400);
+    toast(\`Paper trade simulado • Stake: $\${fmt(stake,2)} • \${state.lastSignal.side}\`,'ok',3400);
   });
-  // Settings
   $('#btnSettings').addEventListener('click', ()=>{$('#modal').style.display='flex';});
   $('#btnCloseModal').addEventListener('click', ()=>{$('#modal').style.display='none';savePrefs();});
   $('#swSound').addEventListener('click', e=>{ e.currentTarget.classList.toggle('on'); state.soundOn = e.currentTarget.classList.contains('on'); savePrefs(); });
   $('#swPaper').addEventListener('click', e=>{ e.currentTarget.classList.toggle('on'); state.paperOn = e.currentTarget.classList.contains('on'); savePrefs(); });
 
-  // time + latency pulse
   setInterval(()=>{
     $('#utc').textContent = new Date().toISOString().substr(11,8);
     const l = Math.floor(rnd(28,86)); $('#latency').textContent = l+'ms';
@@ -688,16 +774,177 @@ function init(){
     dot.style.boxShadow = l<70? '0 0 0 2px rgba(16,185,129,.25)' : '0 0 0 2px rgba(245,158,11,.25)';
   }, 1000);
 
-  // prime data
   buildWatchlist();
   seedData(); resize(); draw();
   setInterval(()=>{ tick(); }, 750);
   setInterval(buildWatchlist, 6000);
-
   updateHeaderMeta();
 }
 function savePrefs(){ storage.set('oracle-prefs', {soundOn: state.soundOn, paperOn: state.paperOn}); }
-window.addEventListener('load', init);
+
+/* ========= AUTH (novo) ========= */
+const Auth = {
+  users: {}, session: null,
+  load(){ this.users = storage.get('oracle-users') || {}; this.session = storage.get('oracle-session') || null; },
+  save(){ storage.set('oracle-users', this.users); },
+  async hash(password, salt){
+    const data = new TextEncoder().encode(password + salt);
+    const buf = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  },
+  genSalt(){ const a = new Uint8Array(16); crypto.getRandomValues(a); return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join(''); },
+  now(){ return Date.now(); },
+  maskCPF(cpf){ cpf = (cpf||'').replace(/\D/g,''); return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4'); },
+  sanitizeCPF(cpf){ return (cpf||'').replace(/\D/g,'').slice(0,11); },
+  validCPF(cpf){
+    cpf = this.sanitizeCPF(cpf);
+    if(cpf.length!==11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    let sum=0; for(let i=0;i<9;i++) sum += parseInt(cpf[i])*(10-i);
+    let rev = (sum*10)%11; rev = rev===10?0:rev; if(rev!==parseInt(cpf[9])) return false;
+    sum=0; for(let i=0;i<10;i++) sum += parseInt(cpf[i])*(11-i);
+    rev = (sum*10)%11; rev = rev===10?0:rev; return rev===parseInt(cpf[10]);
+  },
+  strength(p){
+    let s=0; if(!p) return 0; if(p.length>=8) s++; if(/[A-Z]/.test(p)) s++; if(/[a-z]/.test(p)) s++; if(/\d/.test(p)) s++; if(/[^A-Za-z0-9]/.test(p)) s++;
+    return Math.min(4, s);
+  },
+  sessionValid(){
+    if(!this.session) return false;
+    if(this.session.exp && this.session.exp > this.now()) return true;
+    this.logout(false); return false;
+  },
+  async signup({name, cpf, email, password}){
+    email = (email||'').trim().toLowerCase();
+    cpf = this.sanitizeCPF(cpf);
+    if(!this.validCPF(cpf)) throw new Error('CPF inválido');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('E-mail inválido');
+    if((password||'').length<8) throw new Error('Senha muito curta (mín. 8)');
+    if(this.users[email]) throw new Error('E-mail já cadastrado');
+    const salt = this.genSalt(); const hash = await this.hash(password, salt);
+    this.users[email] = {email, cpf, name: (name||'').trim(), salt, hash, createdAt: this.now()};
+    this.save();
+  },
+  async login({email, password, remember}){
+    email = (email||'').trim().toLowerCase();
+    const rec = this.users[email]; if(!rec) throw new Error('Usuário não encontrado');
+    const hash = await this.hash(password, rec.salt);
+    if(hash !== rec.hash) throw new Error('Senha incorreta');
+    const exp = this.now() + (remember ? 7*24*60*60*1000 : 8*60*60*1000);
+    const token = this.genSalt();
+    this.session = {email, token, exp};
+    storage.set('oracle-session', this.session);
+    return rec;
+  },
+  logout(notify=true){
+    storage.set('oracle-session', null); this.session=null;
+    if(notify) toast('Sessão encerrada','ok');
+    $('#auth').style.display='flex';
+  },
+  currentUser(){ if(!this.session) return null; const u=this.users[this.session.email]; return u?{...u}:null; }
+};
+
+/* ========= AUTH UI BIND ========= */
+function authInit(){
+  Auth.load();
+  // Tabs
+  const tabs = {login: $('#formLogin'), signup: $('#formSignup'), reset: $('#formReset')};
+  function setTab(id){
+    $$('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelector(\`.tab[data-tab="\${id}"]\`).classList.add('active');
+    Object.keys(tabs).forEach(k=>tabs[k].style.display = (k===id?'grid':'none'));
+  }
+  $('#tabLogin').addEventListener('click', ()=>setTab('login'));
+  $('#tabSignup').addEventListener('click', ()=>setTab('signup'));
+  $('#tabReset').addEventListener('click', ()=>setTab('reset'));
+
+  // Input masks + strength
+  const regCPF = $('#regCPF'); const reCPF = $('#reCPF'); const bar = $('#strengthBar');
+  const mask = v => v.replace(/\D/g,'').slice(0,11).replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  if(regCPF) regCPF.addEventListener('input', e=> e.target.value = mask(e.target.value));
+  if(reCPF)  reCPF.addEventListener('input',  e=> e.target.value = mask(e.target.value));
+  $('#regPass').addEventListener('input', e=>{
+    const s = Auth.strength(e.target.value); const w = [0,25,50,75,100][s];
+    bar.style.width = w+'%';
+  });
+
+  // Rate limit (falhas)
+  const loginState = storage.get('oracle-login') || {fails:0, lockUntil:0};
+  function locked(){
+    const now = Date.now();
+    if(loginState.lockUntil && loginState.lockUntil>now){
+      const secs = Math.ceil((loginState.lockUntil-now)/1000);
+      toast(\`Bloqueado por tentativas falhas. Tente em \${secs}s\`,'warn',2000);
+      return true;
+    }
+    return false;
+  }
+  function onFail(){
+    loginState.fails = (loginState.fails||0)+1;
+    if(loginState.fails>=3){ loginState.lockUntil = Date.now()+5*60*1000; loginState.fails=0;}
+    storage.set('oracle-login', loginState);
+  }
+  function onSuccess(){ storage.set('oracle-login', {fails:0, lockUntil:0}); }
+
+  // Forms
+  $('#formSignup').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const name = $('#regName').value; const cpf = $('#regCPF').value;
+    const email = $('#regEmail').value; const p1 = $('#regPass').value; const p2 = $('#regPass2').value;
+    const agree = $('#regAgree').checked;
+    try{
+      if(!agree) throw new Error('Marque a declaração de demonstração');
+      if(p1!==p2) throw new Error('As senhas não coincidem');
+      await Auth.signup({name, cpf, email, password:p1});
+      toast('Conta criada. Você já pode entrar.','ok');
+      setTab('login'); $('#loginEmail').value = email; $('#loginPass').focus();
+    }catch(err){ toast(err.message || 'Erro ao criar conta','err',3500); }
+  });
+
+  $('#formLogin').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    if(locked()) return;
+    const email = $('#loginEmail').value; const password = $('#loginPass').value; const remember = $('#remember').checked;
+    try{
+      const rec = await Auth.login({email, password, remember});
+      onSuccess();
+      $('#auth').style.display='none';
+      $('#whoami').innerHTML = \`Logado como <b>\${rec.name||rec.email}</b> (\${Auth.maskCPF(rec.cpf)})\`;
+      toast(\`Bem-vindo, \${rec.name||rec.email}\`,'ok');
+    }catch(err){ onFail(); toast(err.message || 'Falha no login','err',3000); }
+  });
+
+  $('#formReset').addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const email = $('#reEmail').value.trim().toLowerCase();
+    const cpf = Auth.sanitizeCPF($('#reCPF').value);
+    const newp = $('#rePass').value;
+    try{
+      const rec = Auth.users[email]; if(!rec) throw new Error('Usuário não encontrado');
+      if(rec.cpf !== cpf) throw new Error('CPF não confere');
+      if((newp||'').length<8) throw new Error('Senha muito curta');
+      const salt = Auth.genSalt(); const hash = await Auth.hash(newp, salt);
+      rec.salt = salt; rec.hash = hash; Auth.save();
+      toast('Senha redefinida. Entre com a nova senha.','ok');
+      setTab('login'); $('#loginEmail').value=email; $('#loginPass').focus();
+    }catch(err){ toast(err.message || 'Erro ao redefinir','err',3000); }
+  });
+
+  // Logout
+  $('#btnLogout').addEventListener('click', ()=>{
+    Auth.logout();
+  });
+
+  // Auto-session
+  if(Auth.sessionValid()){
+    const u = Auth.currentUser();
+    $('#auth').style.display='none';
+    if(u) $('#whoami').innerHTML = \`Logado como <b>\${u.name||u.email}</b> (\${Auth.maskCPF(u.cpf)})\`;
+  }else{
+    $('#auth').style.display='flex';
+  }
+}
+
+window.addEventListener('load', ()=>{ init(); authInit(); });
 </script>
 </body>
 </html>
