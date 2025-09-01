@@ -105,29 +105,24 @@
     .switch.on::after{left:28px;background:#34d399}
     .note{font-size:12px;color:var(--muted)}
 
-    /* ================= AUTH OVERLAY (novo) ================= */
+    /* ============ AUTH (novo, simples e estável) ============ */
     .auth{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(8,12,22,.85),rgba(8,12,22,.92));backdrop-filter:blur(10px);z-index:5000}
-    .auth .wrap{width:min(880px,94vw);display:grid;grid-template-columns: 1fr 1fr;gap:0;border:1px solid var(--line);background:linear-gradient(180deg,rgba(19,26,42,.95),rgba(19,26,42,.85));border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-    @media (max-width: 850px){.auth .wrap{grid-template-columns:1fr}}
-    .auth .promo{padding:22px;background:radial-gradient(800px 500px at 30% -10%,rgba(96,165,250,.12),transparent 60%);border-right:1px solid var(--line)}
-    .auth .promo h2{margin:0 0 8px 0}
-    .auth .promo ul{margin:10px 0 0 18px;color:#cfe2ff}
-    .auth .panel{padding:22px;display:grid;gap:16px}
+    .auth .wrap{width:min(820px,94vw);display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);background:linear-gradient(180deg,rgba(19,26,42,.95),rgba(19,26,42,.9));border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+    @media (max-width: 800px){.auth .wrap{grid-template-columns:1fr}}
+    .auth .promo{padding:22px;border-right:1px solid var(--line)}
+    .auth .panel{padding:22px;display:grid;gap:14px}
     .tabs{display:flex;gap:8px}
     .tab{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg,#1b233a,#141c31);cursor:pointer;text-align:center;font-weight:800}
     .tab.active{border-color:#3b82f6;background:linear-gradient(180deg,#2563eb,#1d4ed8);color:white;box-shadow:0 10px 30px rgba(37,99,235,.25)}
     .auth .f{display:grid;gap:10px}
-    .auth .foot{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px}
-    .auth .chk{display:flex;align-items:center;gap:8px;font-size:13px;color:#cfe2ff}
-    .small{font-size:12px;color:var(--muted)}
-    .right{display:flex;gap:10px;align-items:center}
-    .danger{color:#fca5a5}
+    .auth .chk{display:flex;gap:8px;align-items:center;font-size:13px}
     .strength{height:8px;background:#1f2a44;border-radius:999px;overflow:hidden}
     .strength .bar{height:100%;width:0;background:linear-gradient(90deg,#ef4444,#f59e0b,#22c55e)}
   </style>
 </head>
 <body>
-<!-- ================= AUTH OVERLAY (novo) ================= -->
+
+<!-- ============ AUTH OVERLAY ============ -->
 <div class="auth" id="auth" aria-modal="true" role="dialog">
   <div class="wrap">
     <div class="promo">
@@ -145,23 +140,22 @@
         </div>
       </div>
       <h2>Entre para ver a demonstração</h2>
-      <div class="sub">Seu acesso é protegido por credenciais locais. Nada sai do seu navegador.</div>
-      <ul>
-        <li>Cadastro com <b>Nome, CPF, E-mail</b> e senha</li>
-        <li>Senha com <b>hash SHA-256 + salt</b> (localStorage)</li>
-        <li>Login com <b>Lembrar de mim</b> (até 7 dias)</li>
-        <li>Esqueci a senha (valida e-mail + CPF)</li>
+      <div class="sub">Login/Registro 100% local. Não use dados reais.</div>
+      <ul class="sub" style="margin-left:18px">
+        <li>Cadastro com Nome, CPF, E-mail e Senha</li>
+        <li>Senha armazenada com hash (localStorage)</li>
+        <li>Sessão expira em 12 horas</li>
       </ul>
       <div class="kpi" style="margin-top:14px">
-        <div class="sub">Aviso de privacidade</div>
-        <div class="note">Não use <b>CPF real</b>. Este é um protótipo 100% local (off-cloud) e serve apenas para fins educativos.</div>
+        <div class="sub">Privacidade</div>
+        <div class="note">Este protótipo roda só no seu navegador. Nenhum dado é enviado a servidores.</div>
       </div>
     </div>
+
     <div class="panel">
       <div class="tabs">
         <button class="tab active" data-tab="login" id="tabLogin">Entrar</button>
         <button class="tab" data-tab="signup" id="tabSignup">Criar conta</button>
-        <button class="tab" data-tab="reset" id="tabReset">Esqueci</button>
       </div>
 
       <!-- LOGIN -->
@@ -174,10 +168,6 @@
           <label for="loginPass">Senha</label>
           <input id="loginPass" type="password" placeholder="••••••••" required autocomplete="current-password" enterkeyhint="go">
         </div>
-        <div class="row">
-          <label class="chk"><input id="remember" type="checkbox"> Lembrar de mim (7 dias)</label>
-          <span class="small">3 tentativas falhas seguidas bloqueiam por 5 min.</span>
-        </div>
         <button class="btn btn-primary" type="submit">Entrar</button>
       </form>
 
@@ -189,7 +179,7 @@
             <input id="regName" type="text" placeholder="Seu nome" autocomplete="name">
           </div>
           <div class="input">
-            <label for="regCPF">CPF</label>
+            <label for="regCPF">CPF (11 dígitos)</label>
             <input id="regCPF" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" autocomplete="off">
           </div>
         </div>
@@ -208,42 +198,18 @@
             <input id="regPass2" type="password" placeholder="repita a senha" required autocomplete="new-password">
           </div>
         </div>
-        <label class="chk"><input id="regAgree" type="checkbox"> Declaro que compreendo que é uma <b>demonstração local</b> e não usarei dados reais.</label>
+        <label class="chk"><input id="regAgree" type="checkbox"> Entendo que é uma demonstração local e não usarei dados reais.</label>
         <button class="btn btn-primary" type="submit">Criar conta</button>
       </form>
 
-      <!-- RESET -->
-      <form id="formReset" class="f" style="display:none" autocomplete="off">
-        <div class="note">Redefinição local: informe o e-mail e o CPF cadastrados para trocar a senha.</div>
-        <div class="input">
-          <label for="reEmail">E-mail</label>
-          <input id="reEmail" type="email" placeholder="voce@email.com" required>
-        </div>
-        <div class="input">
-          <label for="reCPF">CPF</label>
-          <input id="reCPF" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14" required>
-        </div>
-        <div class="input">
-          <label for="rePass">Nova senha</label>
-          <input id="rePass" type="password" placeholder="mín. 8 caracteres" required>
-        </div>
-        <button class="btn" type="submit">Redefinir senha</button>
-      </form>
-
-      <div class="foot">
-        <span>🔒 LocalStorage • SHA-256 + salt • Sem servidor</span>
-        <div class="right">
-          <span class="small">Precisa de ajuda?</span>
-          <span class="small">Entre em <b>“Configurações → Sessão”</b> para sair.</span>
-        </div>
-      </div>
+      <div class="note">Dica: use e-mail e uma senha de teste. Não utilize seu CPF real.</div>
     </div>
   </div>
 </div>
-<!-- ================= FIM AUTH ================= -->
+<!-- ============ FIM AUTH ============ -->
 
+<!-- ============ APP ORIGINAL (inalterado) ============ -->
 <div class="app">
-  <!-- Top Nav -->
   <div class="nav">
     <div class="nav-inner">
       <div class="logo">
@@ -262,15 +228,13 @@
       <div class="pill">
         <div class="status"><span class="dot" id="conn-dot"></span><span class="latency">Conexão: <b id="latency">42ms</b> • UTC <span id="utc">--:--:--</span></span></div>
         <button id="btnSettings" class="gear" title="Configurações" aria-label="Configurações">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="#cfe2ff" stroke-width="1.8"/><path d="M19.4 15a1.6 1.6 0 0 0 .32 1.76l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.6 1.6 0 0 0-1.76-.32 1.6 1.6 0 0 0-.95 1.46V21a2 2 0 1 1-4 0v-.06a1.6 1.6 0 0 0-.95-1.46 1.6 1.6 0 0 0-1.76.32l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.6 1.6 0 0 0 5 15.4a1.6 1.6 0 0 0-1.46-.95H3a2 2 0 1 1 0-4h.06A1.6 1.6 0 0 0 4.52 9.5c.21-.62.07-1.3-.32-1.76l-.06-.06A2 2 0 1 1 7 4.85l.06.06c.46.39 1.14.53 1.76.32A1.6 1.6 0 0 0 9.77 3.8V3a2 2 0 1 1 4 0v.06c0 .64.37 1.22.95 1.46.62.21 1.3.07 1.76-.32L17.54 4a2 2 0 1 1 2.83 2.83l-.06.06c-.39.46-.53 1.14-.32 1.76.23.58.81.95 1.45.95H22a2 2 0 1 1 0 4h-.06c-.64 0-1.22.37-1.46.95Z" stroke="#9fb0d1" stroke-width="1"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="#cfe2ff" stroke-width="1.8"/><path d="M19.4 15a1.6 1.6 0 0 0 .32 1.76l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.6 1.6 0 0 0-1.76-.32 1.6 1.6 0 0 0-.95 1.46V21a2 2 0 1 1-4 0v-.06a1.6 1.6 0 0 0-.95-1.46 1.6 1.6 0 0 0-1.76.32l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.6 1.6 0 0 0 5 15.4a1.6 1.6 0 0 0-1.46-.95H3a2 2 0 1 1 0-4h-.06A1.6 1.6 0 0 0 4.52 9.5c.21-.62.07-1.3-.32-1.76l-.06-.06A2 2 0 1 1 7 4.85l.06.06c.46.39 1.14.53 1.76.32A1.6 1.6 0 0 0 9.77 3.8V3a2 2 0 1 1 4 0v.06c0 .64.37 1.22.95 1.46.62.21 1.3.07 1.76-.32L17.54 4a2 2 0 1 1 2.83 2.83l-.06.06c-.39.46-.53 1.14-.32 1.76.23.58.81.95 1.45.95H22a2 2 0 1 1 0 4h-.06c-.64 0-1.22.37-1.46.95Z" stroke="#9fb0d1" stroke-width="1"/></svg>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Main -->
   <div class="main">
-    <!-- Controls -->
     <div class="card" id="controls">
       <div class="hd"><h3>Menu de Operação</h3><span class="sub">Configure e gere o sinal</span></div>
       <div class="bd grid grid-auto">
@@ -334,9 +298,7 @@
       </div>
     </div>
 
-    <!-- Right side: Chart + Signal -->
     <div class="grid" style="gap:18px">
-      <!-- Chart -->
       <div class="card">
         <div class="hd"><h3>Gráfico em tempo real</h3><span class="sub mono" id="chartMeta">BTCUSD • 1m • OHLC + EMA20/50 • RSI14</span></div>
         <div class="bd">
@@ -347,7 +309,6 @@
         </div>
       </div>
 
-      <!-- Signal / Result -->
       <div class="card">
         <div class="hd"><h3>Resultado da IA</h3><span class="sub">Última análise</span></div>
         <div class="bd">
@@ -389,13 +350,11 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <div class="foot">
     <span class="badge">🔒 Somente demonstração • 🔄 Dados simulados • ⚠️ Sem garantias de resultado</span>
   </div>
 </div>
 
-<!-- Loading Overlay -->
 <div class="overlay" id="overlay">
   <div class="load">
     <div class="spinner" aria-hidden="true"></div>
@@ -404,7 +363,6 @@
   </div>
 </div>
 
-<!-- Settings Modal -->
 <div class="modal" id="modal">
   <div class="panel">
     <div class="head">
@@ -438,7 +396,6 @@
         <div class="note">PT-BR (fixo no protótipo)</div>
       </div>
 
-      <!-- Sessão / Logout (novo) -->
       <div style="grid-column:1/-1">
         <div class="sub">Sessão</div>
         <div class="row">
@@ -457,7 +414,6 @@
   </div>
 </div>
 
-<!-- Toast container -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -468,7 +424,7 @@ const fmt = (n, dp=2) => Number(n).toLocaleString('en-US',{minimumFractionDigits
 const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
 const rnd = (a,b)=>a+Math.random()*(b-a);
 const toast = (msg,type='ok',ms=2700)=>{
-  const el=document.createElement('div'); el.className=\`t \${type}\`; el.innerHTML=\`\${msg}\`;
+  const el=document.createElement('div'); el.className=`t ${type}`; el.innerHTML=`${msg}`;
   $('#toast').appendChild(el); setTimeout(()=>el.remove(),ms);
 };
 const beep = ()=>{
@@ -504,13 +460,13 @@ function buildWatchlist(){
     const chg = rnd(-2.4,2.4); const price = s.base * (1 + chg/100);
     const div = document.createElement('div');
     div.className='ticker';
-    div.innerHTML = \`
+    div.innerHTML = `
       <div class="row" style="justify-content:space-between">
-        <div class="sym">\${s.sym}</div>
-        <div class="chg \${chg>=0?'up':'down'}">\${chg>=0?'+':''}\${chg.toFixed(2)}%</div>
+        <div class="sym">${s.sym}</div>
+        <div class="chg ${chg>=0?'up':'down'}">${chg>=0?'+':''}${chg.toFixed(2)}%</div>
       </div>
-      <div class="sub mono">≈ \${fmt(price, s.base<5 ? 4 : 2)}</div>
-    \`;
+      <div class="sub mono">≈ ${fmt(price, s.base<5 ? 4 : 2)}</div>
+    `;
     wrap.appendChild(div);
   });
 }
@@ -612,7 +568,7 @@ function draw(ts=0){
   const cw = (x1-x0)/n;
   ctx.strokeStyle='#233153'; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(x0, y1); ctx.lineTo(x1, y1); ctx.stroke();
-  ctx.fillStyle='#9fb0d1'; ctx.font = \`\${12*dpr}px Inter\`;
+  ctx.fillStyle='#9fb0d1'; ctx.font = `${12*dpr}px Inter`;
   for(let t=0;t<=4;t++){
     const yv = yMax - (yMax-yMin)*t/4;
     const y = y0 + (y1-y0)*t/4;
@@ -671,7 +627,7 @@ function genSignal(){
     side, score, entry, stop, take, rsi:Math.round(rsi), ema20:e20, ema50:e50, atr, why, riskPct };
 }
 /* ========= UI BIND ========= */
-function updateHeaderMeta(){ $('#chartMeta').textContent = \`\${state.asset} • \${tfLabel(state.tf)} • OHLC + EMA20/50 • RSI14\`; }
+function updateHeaderMeta(){ $('#chartMeta').textContent = `${state.asset} • ${tfLabel(state.tf)} • OHLC + EMA20/50 • RSI14`; }
 function tfLabel(tf){ const map={5:'5s',15:'15s',60:'1m',300:'5m'}; return map[tf]|| (tf+'s'); }
 function renderSignal(sig){
   const badge = $('#signalBadge'); const span = badge.querySelector('span');
@@ -681,14 +637,14 @@ function renderSignal(sig){
   else {badge.classList.add('sig-hold'); span.textContent='⏸️ Aguardar (HOLD)';}
   const arc = $('#gaugeArc'); const txt = $('#gaugeTxt');
   const len = 2*Math.PI*18; const dash = Math.round(len*(sig.score/100));
-  arc.setAttribute('stroke-dasharray', \`\${dash} \${len-dash}\`);
+  arc.setAttribute('stroke-dasharray', `${dash} ${len-dash}`);
   txt.textContent = sig.score+'%';
-  $('#confInfo').textContent = \`score=\${sig.score} • RSI=\${sig.rsi}\`;
+  $('#confInfo').textContent = `score=${sig.score} • RSI=${sig.rsi}`;
   $('#entry').textContent = 'US$ '+fmt(sig.entry, sig.entry<10?4:2);
   $('#stop').textContent  = 'US$ '+fmt(sig.stop, sig.entry<10?4:2);
   $('#take').textContent  = 'US$ '+fmt(sig.take, sig.entry<10?4:2);
   $('#why').textContent = sig.why.join(' · ');
-  $('#riskEst').textContent = \`\${fmt(sig.riskPct,2)}% do preço (~\${fmt(sig.atr,2)} ATR)\`;
+  $('#riskEst').textContent = `${fmt(sig.riskPct,2)}% do preço (~${fmt(sig.atr,2)} ATR)`;
 }
 function openOverlay(){
   $('#overlay').style.display='flex';
@@ -704,16 +660,9 @@ function openOverlay(){
 }
 function closeOverlay(){ $('#overlay').style.display='none'; }
 function brokersMap(code, urlCustom){
-  const map = {
-    iq:'https://iqoption.com/en/traderoom',
-    quotex:'https://quotex.io/pt/traderoom',
-    deriv:'https://app.deriv.com',
-    pocket:'https://pocketoption.com/en/',
-    custom:urlCustom||'#'
-  };
+  const map = { iq:'https://iqoption.com/en/traderoom', quotex:'https://quotex.io/pt/traderoom', deriv:'https://app.deriv.com', pocket:'https://pocketoption.com/en/', custom:urlCustom||'#' };
   return map[code] || '#';
 }
-/* ========= INIT ========= */
 function init(){
   const pref = storage.get('oracle-prefs') || {};
   state.soundOn = !!pref.soundOn; state.paperOn = pref.paperOn!==false;
@@ -733,20 +682,20 @@ function init(){
       if(!sig){ toast('Dados insuficientes para gerar sinal','warn'); return closeOverlay(); }
       state.lastSignal=sig; renderSignal(sig); beep();
       closeOverlay();
-      toast(\`<span class="mono">Sinal \${sig.side} \${sig.asset}</span> pronto\`);
+      toast(`<span class="mono">Sinal ${sig.side} ${sig.asset}</span> pronto`);
     }, 950);
   });
   $('#btnCopy').addEventListener('click', ()=>{
     if(!state.lastSignal) return toast('Gere um sinal primeiro','warn');
     const s = state.lastSignal;
-    const txt = \`SIGNAL \${s.asset} \${s.side}\nEntry: \${fmt(s.entry)}\nStop: \${fmt(s.stop)}\nTake: \${fmt(s.take)}\nConf: \${s.score}% • RSI \${s.rsi}\nWhy: \${s.why.join(' / ')}\n\${new Date().toLocaleString()}\`;
+    const txt = `SIGNAL ${s.asset} ${s.side}\nEntry: ${fmt(s.entry)}\nStop: ${fmt(s.stop)}\nTake: ${fmt(s.take)}\nConf: ${s.score}% • RSI ${s.rsi}\nWhy: ${s.why.join(' / ')}\n${new Date().toLocaleString()}`;
     navigator.clipboard.writeText(txt); toast('Sinal copiado 📋');
   });
   $('#btnExport').addEventListener('click', ()=>{
     if(!state.lastSignal) return toast('Gere um sinal primeiro','warn');
     const blob = new Blob([JSON.stringify(state.lastSignal,null,2)], {type:'application/json'});
     const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
-    a.download=\`signal_\${state.lastSignal.asset}_\${Date.now()}.json\`; a.click();
+    a.download=`signal_${state.lastSignal.asset}_${Date.now()}.json`; a.click();
     URL.revokeObjectURL(a.href);
   });
   $('#btnOpen').addEventListener('click', ()=>{
@@ -760,7 +709,7 @@ function init(){
     const bal = parseFloat($('#balance').value||'0');
     const riskPct = parseFloat($('#risk').value||'1');
     const stake = bal * (riskPct/100);
-    toast(\`Paper trade simulado • Stake: $\${fmt(stake,2)} • \${state.lastSignal.side}\`,'ok',3400);
+    toast(`Paper trade simulado • Stake: $${fmt(stake,2)} • ${state.lastSignal.side}`,'ok',3400);
   });
   $('#btnSettings').addEventListener('click', ()=>{$('#modal').style.display='flex';});
   $('#btnCloseModal').addEventListener('click', ()=>{$('#modal').style.display='none';savePrefs();});
@@ -782,163 +731,107 @@ function init(){
 }
 function savePrefs(){ storage.set('oracle-prefs', {soundOn: state.soundOn, paperOn: state.paperOn}); }
 
-/* ========= AUTH (novo) ========= */
+/* ========= AUTH (refeito, sem "esqueci") ========= */
 const Auth = {
   users: {}, session: null,
   load(){ this.users = storage.get('oracle-users') || {}; this.session = storage.get('oracle-session') || null; },
   save(){ storage.set('oracle-users', this.users); },
-  async hash(password, salt){
-    const data = new TextEncoder().encode(password + salt);
-    const buf = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  async sha256Hex(str){
+    if(window.crypto && crypto.subtle){
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+    // Fallback leve (FNV-1a + mix) — suficiente p/ DEMO
+    let h=0x811c9dc5;
+    for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = (h>>>0) + ((h<<1)+(h<<4)+(h<<7)+(h<<8)+(h<<24)); }
+    return ('00000000'+(h>>>0).toString(16)).slice(-8).repeat(8);
   },
-  genSalt(){ const a = new Uint8Array(16); crypto.getRandomValues(a); return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join(''); },
+  genSalt(){ const a = new Uint8Array(16); (window.crypto?.getRandomValues ? crypto.getRandomValues(a) : a.fill(Math.floor(Math.random()*255))); return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join(''); },
   now(){ return Date.now(); },
-  maskCPF(cpf){ cpf = (cpf||'').replace(/\D/g,''); return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4'); },
+  maskCPF(cpf){ cpf = (cpf||'').replace(/\D/g,''); if(cpf.length<11) return cpf; return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4'); },
   sanitizeCPF(cpf){ return (cpf||'').replace(/\D/g,'').slice(0,11); },
-  validCPF(cpf){
-    cpf = this.sanitizeCPF(cpf);
-    if(cpf.length!==11 || /^(\d)\1{10}$/.test(cpf)) return false;
-    let sum=0; for(let i=0;i<9;i++) sum += parseInt(cpf[i])*(10-i);
-    let rev = (sum*10)%11; rev = rev===10?0:rev; if(rev!==parseInt(cpf[9])) return false;
-    sum=0; for(let i=0;i<10;i++) sum += parseInt(cpf[i])*(11-i);
-    rev = (sum*10)%11; rev = rev===10?0:rev; return rev===parseInt(cpf[10]);
-  },
-  strength(p){
-    let s=0; if(!p) return 0; if(p.length>=8) s++; if(/[A-Z]/.test(p)) s++; if(/[a-z]/.test(p)) s++; if(/\d/.test(p)) s++; if(/[^A-Za-z0-9]/.test(p)) s++;
-    return Math.min(4, s);
-  },
-  sessionValid(){
-    if(!this.session) return false;
-    if(this.session.exp && this.session.exp > this.now()) return true;
-    this.logout(false); return false;
-  },
+  softValidCPF(cpf){ cpf=this.sanitizeCPF(cpf); if(cpf.length!==11) return false; if(/^(\d)\1{10}$/.test(cpf)) return false; return true; },
   async signup({name, cpf, email, password}){
     email = (email||'').trim().toLowerCase();
     cpf = this.sanitizeCPF(cpf);
-    if(!this.validCPF(cpf)) throw new Error('CPF inválido');
+    if(!this.softValidCPF(cpf)) throw new Error('CPF deve ter 11 dígitos válidos');
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('E-mail inválido');
     if((password||'').length<8) throw new Error('Senha muito curta (mín. 8)');
     if(this.users[email]) throw new Error('E-mail já cadastrado');
-    const salt = this.genSalt(); const hash = await this.hash(password, salt);
+    const salt = this.genSalt(); const hash = await this.sha256Hex(password + salt);
     this.users[email] = {email, cpf, name: (name||'').trim(), salt, hash, createdAt: this.now()};
     this.save();
   },
-  async login({email, password, remember}){
+  async login({email, password}){
     email = (email||'').trim().toLowerCase();
     const rec = this.users[email]; if(!rec) throw new Error('Usuário não encontrado');
-    const hash = await this.hash(password, rec.salt);
+    const hash = await this.sha256Hex(password + rec.salt);
     if(hash !== rec.hash) throw new Error('Senha incorreta');
-    const exp = this.now() + (remember ? 7*24*60*60*1000 : 8*60*60*1000);
+    const exp = this.now() + 12*60*60*1000; // 12h
     const token = this.genSalt();
     this.session = {email, token, exp};
     storage.set('oracle-session', this.session);
     return rec;
   },
-  logout(notify=true){
+  logout(){
     storage.set('oracle-session', null); this.session=null;
-    if(notify) toast('Sessão encerrada','ok');
-    $('#auth').style.display='flex';
+    toast('Sessão encerrada','ok'); $('#auth').style.display='flex';
   },
-  currentUser(){ if(!this.session) return null; const u=this.users[this.session.email]; return u?{...u}:null; }
+  sessionValid(){ return !!(this.session && this.session.exp && this.session.exp > this.now()); },
+  currentUser(){ if(!this.session) return null; return this.users[this.session.email] || null; }
 };
 
-/* ========= AUTH UI BIND ========= */
 function authInit(){
   Auth.load();
+
   // Tabs
-  const tabs = {login: $('#formLogin'), signup: $('#formSignup'), reset: $('#formReset')};
+  const tabs = {login: $('#formLogin'), signup: $('#formSignup')};
   function setTab(id){
     $$('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelector(\`.tab[data-tab="\${id}"]\`).classList.add('active');
+    document.querySelector(`.tab[data-tab="${id}"]`).classList.add('active');
     Object.keys(tabs).forEach(k=>tabs[k].style.display = (k===id?'grid':'none'));
   }
   $('#tabLogin').addEventListener('click', ()=>setTab('login'));
   $('#tabSignup').addEventListener('click', ()=>setTab('signup'));
-  $('#tabReset').addEventListener('click', ()=>setTab('reset'));
 
-  // Input masks + strength
-  const regCPF = $('#regCPF'); const reCPF = $('#reCPF'); const bar = $('#strengthBar');
+  // Mask & strength
+  const regCPF = $('#regCPF'); const bar = $('#strengthBar');
   const mask = v => v.replace(/\D/g,'').slice(0,11).replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
   if(regCPF) regCPF.addEventListener('input', e=> e.target.value = mask(e.target.value));
-  if(reCPF)  reCPF.addEventListener('input',  e=> e.target.value = mask(e.target.value));
-  $('#regPass').addEventListener('input', e=>{
-    const s = Auth.strength(e.target.value); const w = [0,25,50,75,100][s];
-    bar.style.width = w+'%';
-  });
-
-  // Rate limit (falhas)
-  const loginState = storage.get('oracle-login') || {fails:0, lockUntil:0};
-  function locked(){
-    const now = Date.now();
-    if(loginState.lockUntil && loginState.lockUntil>now){
-      const secs = Math.ceil((loginState.lockUntil-now)/1000);
-      toast(\`Bloqueado por tentativas falhas. Tente em \${secs}s\`,'warn',2000);
-      return true;
-    }
-    return false;
-  }
-  function onFail(){
-    loginState.fails = (loginState.fails||0)+1;
-    if(loginState.fails>=3){ loginState.lockUntil = Date.now()+5*60*1000; loginState.fails=0;}
-    storage.set('oracle-login', loginState);
-  }
-  function onSuccess(){ storage.set('oracle-login', {fails:0, lockUntil:0}); }
+  $('#regPass').addEventListener('input', e=>{ const p=e.target.value; const s = (p.length>=8)+(/[A-Z]/.test(p))+(/[a-z]/.test(p))+(/\d/.test(p))+(/[^A-Za-z0-9]/.test(p)); bar.style.width = `${Math.min(4,s)/4*100}%`; });
 
   // Forms
   $('#formSignup').addEventListener('submit', async (e)=>{
     e.preventDefault();
-    const name = $('#regName').value; const cpf = $('#regCPF').value;
-    const email = $('#regEmail').value; const p1 = $('#regPass').value; const p2 = $('#regPass2').value;
-    const agree = $('#regAgree').checked;
+    const name=$('#regName').value, cpf=$('#regCPF').value, email=$('#regEmail').value, p1=$('#regPass').value, p2=$('#regPass2').value, agree=$('#regAgree').checked;
     try{
       if(!agree) throw new Error('Marque a declaração de demonstração');
       if(p1!==p2) throw new Error('As senhas não coincidem');
       await Auth.signup({name, cpf, email, password:p1});
       toast('Conta criada. Você já pode entrar.','ok');
-      setTab('login'); $('#loginEmail').value = email; $('#loginPass').focus();
+      setTab('login'); $('#loginEmail').value=email; $('#loginPass').focus();
     }catch(err){ toast(err.message || 'Erro ao criar conta','err',3500); }
   });
 
   $('#formLogin').addEventListener('submit', async (e)=>{
     e.preventDefault();
-    if(locked()) return;
-    const email = $('#loginEmail').value; const password = $('#loginPass').value; const remember = $('#remember').checked;
+    const email=$('#loginEmail').value, password=$('#loginPass').value;
     try{
-      const rec = await Auth.login({email, password, remember});
-      onSuccess();
+      const rec = await Auth.login({email, password});
       $('#auth').style.display='none';
-      $('#whoami').innerHTML = \`Logado como <b>\${rec.name||rec.email}</b> (\${Auth.maskCPF(rec.cpf)})\`;
-      toast(\`Bem-vindo, \${rec.name||rec.email}\`,'ok');
-    }catch(err){ onFail(); toast(err.message || 'Falha no login','err',3000); }
-  });
-
-  $('#formReset').addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const email = $('#reEmail').value.trim().toLowerCase();
-    const cpf = Auth.sanitizeCPF($('#reCPF').value);
-    const newp = $('#rePass').value;
-    try{
-      const rec = Auth.users[email]; if(!rec) throw new Error('Usuário não encontrado');
-      if(rec.cpf !== cpf) throw new Error('CPF não confere');
-      if((newp||'').length<8) throw new Error('Senha muito curta');
-      const salt = Auth.genSalt(); const hash = await Auth.hash(newp, salt);
-      rec.salt = salt; rec.hash = hash; Auth.save();
-      toast('Senha redefinida. Entre com a nova senha.','ok');
-      setTab('login'); $('#loginEmail').value=email; $('#loginPass').focus();
-    }catch(err){ toast(err.message || 'Erro ao redefinir','err',3000); }
+      $('#whoami').innerHTML = `Logado como <b>${rec.name||rec.email}</b> (${Auth.maskCPF(rec.cpf)})`;
+      toast(`Bem-vindo, ${rec.name||rec.email}`,'ok');
+    }catch(err){ toast(err.message || 'Falha no login','err',3000); }
   });
 
   // Logout
-  $('#btnLogout').addEventListener('click', ()=>{
-    Auth.logout();
-  });
+  $('#btnLogout').addEventListener('click', ()=>{ Auth.logout(); });
 
   // Auto-session
   if(Auth.sessionValid()){
     const u = Auth.currentUser();
     $('#auth').style.display='none';
-    if(u) $('#whoami').innerHTML = \`Logado como <b>\${u.name||u.email}</b> (\${Auth.maskCPF(u.cpf)})\`;
+    if(u) $('#whoami').innerHTML = `Logado como <b>${u.name||u.email}</b> (${Auth.maskCPF(u.cpf)})`;
   }else{
     $('#auth').style.display='flex';
   }
