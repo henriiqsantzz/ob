@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Oráculo Crypto — IA de Sinais (DEMO)</title>
+  <title>Oráculo Crypto — IA de Sinais</title>
   <meta name="description" content="Demonstração de um aplicativo web de IA que analisa cripto em tempo real e gera sinais de COMPRAR/VENDER.">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -136,19 +136,19 @@
         </div>
         <div>
           <div class="title">Oráculo Crypto</div>
-          <div class="sub">Acesso restrito • Demonstração</div>
+          <div class="sub">Acesso restrito</div>
         </div>
       </div>
-      <h2>Entre para ver a demonstração</h2>
-      <div class="sub">Login/Registro 100% local. Não use dados reais.</div>
+      <h2></h2>
+      <div class="sub">Login/Registro 100% local.</div>
       <ul class="sub" style="margin-left:18px">
         <li>Cadastro com Nome, CPF, E-mail e Senha</li>
-        <li>Senha armazenada com hash (localStorage)</li>
-        <li>Sessão expira em 12 horas</li>
+        <li></li>
+        <li></li>
       </ul>
       <div class="kpi" style="margin-top:14px">
         <div class="sub">Privacidade</div>
-        <div class="note">Este protótipo roda só no seu navegador. Nenhum dado é enviado a servidores.</div>
+        <div class="note">Seus dados roda só no seu navegador.</div>
       </div>
     </div>
 
@@ -198,11 +198,11 @@
             <input id="regPass2" type="password" placeholder="repita a senha" required autocomplete="new-password">
           </div>
         </div>
-        <label class="chk"><input id="regAgree" type="checkbox"> Entendo que é uma demonstração local e não usarei dados reais.</label>
+        <label class="chk"><input id="regAgree" type="checkbox"></label>
         <button class="btn btn-primary" type="submit">Criar conta</button>
       </form>
 
-      <div class="note">Dica: use e-mail e uma senha de teste. Não utilize seu CPF real.</div>
+      <div class="note">Dica: use seus dados real.</div>
     </div>
   </div>
 </div>
@@ -222,7 +222,7 @@
         </div>
         <div>
           <div class="title">Oráculo Crypto</div>
-          <div class="sub">IA de Sinais • Demonstração</div>
+          <div class="sub">IA de Sinais</div>
         </div>
       </div>
       <div class="pill">
@@ -251,20 +251,20 @@
         <div class="select">
           <label for="tf">Timeframe</label>
           <select id="tf">
-            <option value="5">5s (demo)</option>
-            <option value="15">15s (demo)</option>
-            <option value="60" selected>1m (simulado)</option>
-            <option value="300">5m (simulado)</option>
+            <option value="5">5s</option>
+            <option value="15">15s</option>
+            <option value="60" selected>1m</option>
+            <option value="300">5m</option>
           </select>
         </div>
         <div class="select">
           <label for="broker">Broker (destino)</label>
           <select id="broker">
-            <option value="iq">IQ Option (DEMO)</option>
-            <option value="quotex">Quotex (DEMO)</option>
-            <option value="deriv">Deriv (DEMO)</option>
-            <option value="pocket">Pocket Option (DEMO)</option>
-            <option value="custom">Outro (custom)</option>
+            <option value="iq">IQ Option</option>
+            <option value="quotex">Quotex</option>
+            <option value="deriv">Deriv</option>
+            <option value="pocket">Pocket Option</option>
+            <option value="custom">Outro</option>
           </select>
         </div>
         <div class="input" id="customWrap" style="display:none">
@@ -280,7 +280,7 @@
           </select>
         </div>
         <div class="input">
-          <label for="balance">Banca (simulada)</label>
+          <label for="balance">Banca</label>
           <input id="balance" type="number" min="50" step="50" value="10000" />
         </div>
         <div class="row" style="margin-top:4px">
@@ -288,12 +288,12 @@
           <button class="btn btn-ghost" id="btnPaper">Paper Trade</button>
         </div>
         <div class="kpi">
-          <div class="sub">Observação</div>
-          <div class="note">Este é um <b>protótipo</b> com dados <b>simulados</b>, apenas para demonstração. Não use para decisões reais.</div>
+          <div class="sub"></div>
+          <div class="note"></div>
         </div>
       </div>
       <div class="bd">
-        <div class="sub">Watchlist (simulada)</div>
+        <div class="sub">Watchlist</div>
         <div class="watchlist" id="watchlist"></div>
       </div>
     </div>
@@ -304,7 +304,7 @@
         <div class="bd">
           <div class="chart-wrap">
             <canvas id="chart" aria-label="Candlestick chart"></canvas>
-            <div class="watermark">DEMO</div>
+            <div class="watermark"></div>
           </div>
         </div>
       </div>
@@ -341,7 +341,7 @@
           </div>
 
           <div class="row" style="margin-top:12px;gap:10px;flex-wrap:wrap">
-            <button class="btn btn-buy" id="btnOpen">Abrir na Broker (DEMO)</button>
+            <button class="btn btn-buy" id="btnOpen">Abrir na Broker</button>
             <button class="btn" id="btnCopy">Copiar Sinal</button>
             <button class="btn btn-ghost" id="btnExport">Exportar JSON</button>
           </div>
@@ -351,7 +351,7 @@
   </div>
 
   <div class="foot">
-    <span class="badge">🔒 Somente demonstração • 🔄 Dados simulados • ⚠️ Sem garantias de resultado</span>
+    <span class="badge"></span>
   </div>
 </div>
 
@@ -375,7 +375,7 @@
     <div class="body grid grid-2">
       <div>
         <div class="sub">Tema</div>
-        <div class="note">Este protótipo usa tema escuro moderno.</div>
+        <div class="note">Este App usa tema escuro moderno.</div>
       </div>
       <div>
         <div class="sub">Som de notificação</div>
@@ -388,12 +388,12 @@
         <div class="sub">Execução de ordem</div>
         <div class="row">
           <div id="swPaper" class="switch on" role="switch" aria-checked="true"></div>
-          <div class="note">Paper trading ativado (não envia ordens reais)</div>
+          <div class="note">Paper trading ativado</div>
         </div>
       </div>
       <div>
         <div class="sub">Idioma</div>
-        <div class="note">PT-BR (fixo no protótipo)</div>
+        <div class="note">PT-BR</div>
       </div>
 
       <div style="grid-column:1/-1">
